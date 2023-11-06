@@ -204,7 +204,21 @@ class MyTransformerEncoder(nn.Module):
         if self.norm is not  None:
             output = self.norm(output)
 
-        return output   # [src_len, batch_size, num_heads * kdim] <==> [src_len,batch_size,embed_dim]
+        return output  # [src_len, batch_size, num_heads * kdim] <==> [src_len,batch_size,embed_dim]
+
+class MyTransformerDecoderLayer(nn.Module):
+    def __init__(self, d_model, nhead, dim_feedforward=2048, dropout=0.1):
+        super(MyTransformerDecoderLayer, self).__init__()
+
+        self.self_attn = MyMultiheadAttention(d_model=d_model, nhead=nhead, dropout=dropout)
+        self.multi_attn = MyMultiheadAttention(d_model=d_model, nhead=nhead, dropout=dropout)
+
+        self.linear1 = nn.Linear(d_model, dim_feedforward)
+        self.dropout = nn.Dropout(dropout)
+        self.linear2 = nn.Linear(dim_feedforward, d_model)
+
+        self.norm1 = nn.LayerNorm()
+
 
 
 if __name__ == '__main__':
