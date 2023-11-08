@@ -217,7 +217,26 @@ class MyTransformerDecoderLayer(nn.Module):
         self.dropout = nn.Dropout(dropout)
         self.linear2 = nn.Linear(dim_feedforward, d_model)
 
-        self.norm1 = nn.LayerNorm()
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.norm3 = nn.LayerNorm(d_model)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
+        self.dropout3 = nn.Dropout(dropout)
+
+        self.activation = nn.ReLU()
+
+    def forward(self, tgt, memory, tgt_mask, ):
+        """
+        :param tgt:  解码部分的输入，形状为 [tgt_len,batch_size, embed_dim]
+        :param memory: 编码部分的输出（memory）, [src_len,batch_size,embed_dim]
+        :param tgt_mask: 注意力Mask输入，用于掩盖当前position之后的信息, [tgt_len, tgt_len]
+        :param memory_mask: 编码器-解码器交互时的注意力掩码，一般为None
+        :param tgt_key_padding_mask: 解码部分输入的padding情况，形状为 [batch_size, tgt_len]
+        :param memory_key_padding_mask: 编码部分输入的padding情况，形状为 [batch_size, src_len]
+        :return:
+        """
+        pass
 
 
 
