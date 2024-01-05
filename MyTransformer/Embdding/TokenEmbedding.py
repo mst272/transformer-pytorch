@@ -32,6 +32,7 @@ if __name__ == '__main__':
     embedding = TokenEmbedding(10, 6)
     # 输出的output即为token embedding后的矩阵，矩阵的每一行代表一个单词表示。
     output = embedding(input_word)
+    print(output.size())
     print(output)
 
 
