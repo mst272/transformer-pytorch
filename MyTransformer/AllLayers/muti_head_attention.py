@@ -1,6 +1,7 @@
 # step 4、 构建多头注意力层
 
 import torch.nn as nn
+from calculate_attention import calculate_attention
 
 
 # 现在接受的输入是将token embedding 和 position embedding相加的矩阵，维度为[batch_size, seq_len, dim_vector]
@@ -25,6 +26,8 @@ class MultiHeadAttention(nn.Module):
         q, k, v = self.dim_head_split(q), self.dim_head_split(k), self.dim_head_split(v)
 
         # 3、进行注意力的计算
+        out, attention = calculate_attention(q, k, v)
+
 
     def dim_head_split(self, tensor):
         """
