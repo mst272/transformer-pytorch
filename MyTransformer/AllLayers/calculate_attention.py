@@ -28,7 +28,7 @@ def calculate_attention(q, k, v, mask=None, dropout=None):
 
     # 3、 进行softmax,使参数在0-1的范围内
     attention = F.softmax(attention, dim=-1)  # dim=-1表示在最后一维即dim_split维进行softmax
-    if dropout is not  None:
+    if dropout is not None:
         attention = F.dropout(attention, dropout)
 
     # 4、将结果与 V相乘
