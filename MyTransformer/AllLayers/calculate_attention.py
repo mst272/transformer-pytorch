@@ -33,5 +33,7 @@ def calculate_attention(q, k, v, mask=None, dropout=None):
 
     # 4、将结果与 V相乘
     out = torch.matmul(attention, v)
+    print(f"attention size is {attention.size()}")
+    print(f"out size is {out.size()}")
 
     return out, attention

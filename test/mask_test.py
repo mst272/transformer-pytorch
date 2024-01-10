@@ -27,13 +27,13 @@ print("原始输入序列:")
 print(input_sequence)
 
 print("\n填充掩码:")
-print(padding_mask)
+print(padding_mask.size(), padding_mask)
 
-print("\n未来信息掩码:")
-print(future_mask)
+# print("\n未来信息掩码:")
+# print(future_mask)
 
 print("\n应用填充掩码后的输入:")
-print(masked_input)
+print(masked_input.size(),masked_input)
 
 # print("\n应用未来信息掩码后的输入:")
 # print(future_masked_input)

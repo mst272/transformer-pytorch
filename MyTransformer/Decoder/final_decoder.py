@@ -5,7 +5,7 @@ from MyTransformer.Decoder.decoder_layer import DecoderLayer
 
 
 class Decoder(nn.Module):
-    def __init__(self, vocab_size, dim_vector, max_len, dropout, num_layer, dim_hidden, n_head):
+    def __init__(self, vocab_size, dim_vector, max_len, dropout, num_layer, n_head, dim_hidden):
         super().__init__()
         self.embed = TransformerEmbedding(vocab_size, dim_vector, max_len, dropout)
 
