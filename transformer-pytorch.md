@@ -6,6 +6,8 @@
 
   我计划用简洁的语言和详细的代码进行解释，提供一个完整的代码指南（**for both coders and non-coders**）with a step-by-step approach to understanding how they work.。
 
+  下面是代码中的总结构图，包括每一个步骤及其中包含的字模块
+
 ## Table of Contents
 
 
@@ -139,4 +141,6 @@ class TransformerEmbedding(nn.Module):
         position_embd = self.position_embd(x)  # output size: [seq_len, dim_vector]
         return self.dropout(token_embd + position_embd)
 ```
+
+## Step 4. Building Multi Head Attention
 
