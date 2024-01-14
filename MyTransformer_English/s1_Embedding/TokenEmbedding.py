@@ -4,9 +4,13 @@ import torch
 import torch.nn as nn
 
 
+# 1.1 TokenEmbedding
 class TokenEmbedding(nn.Module):
     """
     Token Embedding represents each word as a vector
+
+    input size: [batch_size, seq_length]
+    return size: [batch_size, seq_length, dim_vector]
 
     Args:
         vocab_size: size of vocabulary,the vocabulary size determines the total number of unique words in our dataset.
