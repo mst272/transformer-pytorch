@@ -1,4 +1,4 @@
-# step 2、 Positional embeddings for our input
+# step 1.2、 Positional embeddings for our input
 import torch
 from torch import nn
 import math
@@ -8,7 +8,7 @@ class PositionalEmbedding(nn.Module):
     """
         Use the two formulas in the paper to calculate PositionalEmbedding
 
-        input size: [batch_size, seq_length]
+        input x size: [batch_size, seq_length]
         return size: [seq_length, dim_vector]
 
         Args:
