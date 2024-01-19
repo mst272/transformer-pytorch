@@ -410,5 +410,54 @@ class EncoderLayer(nn.Module):
 
 ### Step 3.2 Final Encoder
 
-待更新
+The final Encoder part, including Embedding and encoder_layer。这一步非常简单，就是组装之前写好的模块，代码如下：
+
+```python
+# step 3.2 The final Encoder part, including Embedding and encoder_layer
+import torch.nn as nn
+import torch
+from MyTransformer_English.s1_Embedding.TransformerEmbedding import TransformerEmbedding
+from MyTransformer_English.s3_Encoder.encoder_layer import EncoderLayer
+
+
+class Encoder(nn.Module):
+    """
+        Final Encoder Layer
+
+        input size:[batch_size, seq_length, dim_vector]
+        return size: [batch_size, seq_length, dim_vector]
+
+        Args:
+            vocab_size: size of vocabulary,the vocabulary size determines the total number of unique words in our dataset.
+            dim_vector: the dimension of embedding vector for each input word.
+            n_head: Number of heads
+            max_len: Maximum length of input sentence
+            dim_hidden: The parameter in the feedforward layer
+            drop_out: probability of an element to be zeroed.
+            num_layer: The number of encoders
+    """
+    def __init__(self, vocab_size, dim_vector, max_len, drop_out, num_layer, n_head, dim_hidden):
+        super().__init__()
+        self.embed = TransformerEmbedding(vocab_size, dim_vector, max_len, drop_out)
+        self.encoder_layers = nn.ModuleList(
+            [EncoderLayer(dim_vector, n_head, dim_hidden, drop_out) for _ in range(num_layer)])
+
+    def forward(self, x, src_mask):
+        x = self.embed(x)
+        for layer in self.encoder_layers:
+            x = layer(x, src_mask)
+        return x
+```
+
+
+
+## Step 4. Decoder
+
+
+
+### Step 4.1 Decoder Layer
+
+构建decoder有点复杂，建议看代码之前好好阅读文章开始时推荐的结合阅读以及transformer结构相关的文章。
+
+In "encoder-decoder attention" layers, the q come from the previous decoder layer, and the k and v come from the output of the encoder.
 

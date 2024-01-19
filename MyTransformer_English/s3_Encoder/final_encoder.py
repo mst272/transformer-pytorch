@@ -1,11 +1,26 @@
-# step 8、最终的Encoder部分，包括Embedding 和 encoder_layer,且我们的encoder_layer实现了一层，实际论文中是叠加了32层
+# step 3.2 The final Encoder part, including Embedding and encoder_layer
 import torch.nn as nn
 import torch
-from MyTransformer.Embedding.TransformerEmbedding import TransformerEmbedding
-from MyTransformer.Encoder.encoder_layer import EncoderLayer
+from MyTransformer_English.s1_Embedding.TransformerEmbedding import TransformerEmbedding
+from MyTransformer_English.s3_Encoder.encoder_layer import EncoderLayer
 
 
 class Encoder(nn.Module):
+    """
+        Final Encoder Layer
+
+        input size:[batch_size, seq_length, dim_vector]
+        return size: [batch_size, seq_length, dim_vector]
+
+        Args:
+            vocab_size: size of vocabulary,the vocabulary size determines the total number of unique words in our dataset.
+            dim_vector: the dimension of embedding vector for each input word.
+            n_head: Number of heads
+            max_len: Maximum length of input sentence
+            dim_hidden: The parameter in the feedforward layer
+            drop_out: probability of an element to be zeroed.
+            num_layer: The number of encoders
+    """
     def __init__(self, vocab_size, dim_vector, max_len, drop_out, num_layer, n_head, dim_hidden):
         super().__init__()
         self.embed = TransformerEmbedding(vocab_size, dim_vector, max_len, drop_out)
@@ -14,10 +29,8 @@ class Encoder(nn.Module):
 
     def forward(self, x, src_mask):
         x = self.embed(x)
-
         for layer in self.encoder_layers:
             x = layer(x, src_mask)
-
         return x
 
 
