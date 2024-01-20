@@ -75,18 +75,3 @@ class MultiHeadAttention(nn.Module):
 
         return tensor
 
-
-# --------------------------------测试----------------------
-if __name__ == '__main__':
-    # 1、位置编码及token编码部分
-    input_word = torch.LongTensor([[1, 0, 4, 5], [4, 3, 2, 9]])
-    print(input_word.size())
-    embedding = TransformerEmbedding(10, 6, 10, 0.1)
-    # 输出的output即为token embedding后的矩阵，矩阵的每一行代表一个单词表示。
-    output = embedding(input_word)
-
-    # 2、多头注意力测试部分
-    mul_attention = MultiHeadAttention(6, 2)
-    out = mul_attention(output, output, output)
-    print(f"多头注意力后输出矩阵的维度为{out.size()}")
-    print(out)

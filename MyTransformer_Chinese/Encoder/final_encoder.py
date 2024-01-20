@@ -1,8 +1,8 @@
 # step 8、最终的Encoder部分，包括Embedding 和 encoder_layer,且我们的encoder_layer实现了一层，实际论文中是叠加了32层
 import torch.nn as nn
 import torch
-from MyTransformer.Embedding.TransformerEmbedding import TransformerEmbedding
-from MyTransformer.Encoder.encoder_layer import EncoderLayer
+from MyTransformer_Chinese.Embedding.TransformerEmbedding import TransformerEmbedding
+from MyTransformer_Chinese.Encoder.encoder_layer import EncoderLayer
 
 
 class Encoder(nn.Module):

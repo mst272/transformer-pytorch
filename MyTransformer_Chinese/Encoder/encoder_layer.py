@@ -1,7 +1,7 @@
 # step 7、前面已经把各个模块写好了，现在就需要组装起来，组成encoder layer
 import torch.nn as nn
-from MyTransformer.AllLayers.muti_head_attention import MultiHeadAttention
-from MyTransformer.AllLayers.feed_forward import FeedForward
+from MyTransformer_Chinese.AllLayers.muti_head_attention import MultiHeadAttention
+from MyTransformer_Chinese.AllLayers.feed_forward import FeedForward
 
 
 class EncoderLayer(nn.Module):

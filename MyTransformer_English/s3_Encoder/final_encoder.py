@@ -34,14 +34,5 @@ class Encoder(nn.Module):
         return x
 
 
-# --------------------------------测试-----------------------------------------
-if __name__ == '__main__':
-    # 1、Encoder部分测试
-    input_word = torch.LongTensor([[1, 0, 4, 5], [4, 3, 2, 9]])
-    print(input_word.size())
-    encoder = Encoder(10, 6, 10, 0.1, 3, 2, 4)
-    out = encoder(input_word, None)
-    print(out.size())
-    print(out)
 
 

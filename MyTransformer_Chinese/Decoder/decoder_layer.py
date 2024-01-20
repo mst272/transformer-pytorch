@@ -1,7 +1,7 @@
 # step 9、开始构建encoder layer
 import torch.nn as nn
-from MyTransformer.AllLayers.muti_head_attention import MultiHeadAttention
-from MyTransformer.AllLayers.feed_forward import FeedForward
+from MyTransformer_Chinese.AllLayers.muti_head_attention import MultiHeadAttention
+from MyTransformer_Chinese.AllLayers.feed_forward import FeedForward
 
 
 class DecoderLayer(nn.Module):

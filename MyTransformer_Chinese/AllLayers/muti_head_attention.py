@@ -2,8 +2,8 @@
 
 import torch.nn as nn
 
-from MyTransformer.Embedding.TransformerEmbedding import TransformerEmbedding
-from MyTransformer.AllLayers.calculate_attention import calculate_attention
+from MyTransformer_Chinese.Embedding.TransformerEmbedding import TransformerEmbedding
+from MyTransformer_Chinese.AllLayers.calculate_attention import calculate_attention
 import torch
 
 

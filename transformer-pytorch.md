@@ -1,27 +1,25 @@
 # Transformer code: Step-by-step Understanding
 
+   After reading the article “Solving Transformer by Hand: A Step-by-Step Math Example,” I have gained a deeper understanding of the transformer. Unfortunately, the article does not provide specific code examples for each step. Therefore, this article, based on the aforementioned article, offers code examples and explanations for each part. It is strongly recommended to read this article together with “Solving Transformer by Hand: A Step-by-Step Math Example.”
 
+  I plan to use concise language and detailed code explanations to provide a comprehensive code guide (for both coders and non-coders) with a step-by-step approach to understanding how they work.
 
-  阅读文章 Solving Transformer by Hand: A Step-by-Step Math Example后对 transformer 有了进一步的认识，遗憾的是文章中并没有给出每一步的具体代码示例，故本文基于上述提到的文章，对每个部分都进行了代码示例及讲解。强烈建议与Solving Transformer by Hand: A Step-by-Step Math Example 一起阅读本文。
+ The following is an overall structure diagram of the code, including each step and its respective sub-modules.
 
-  我计划用简洁的语言和详细的代码进行解释，提供一个完整的代码指南（**for both coders and non-coders**）with a step-by-step approach to understanding how they work.。
-
-  下面是代码中的总结构图，包括每一个步骤及其中包含的字模块
+![transformer](./pic/transformer.png)
 
 ## Table of Contents
 
-
+[TOC]
 
 ## Step 1. Embedding
 
-
-
 ### Step 1.1 Token Embedding
 
-第一步就是Token Embedding了，即将每一个词用向量表示。代码还是比较简单的，用了torch中现成的Embedding模块。
+The first step is Token Embedding, where each word is represented by a vector. Code is relatively simple, using the existing Embedding module in torch.
 
 ``` python
-# step 1、The first step is Token Embedding, which is word vector encoding.
+# step 1.1 The first step is Token Embedding, which is word vector encoding.
 
 import torch
 import torch.nn as nn
@@ -46,20 +44,16 @@ class TokenEmbedding(nn.Module):
         return self.token_embed(x)
 ```
 
-
-
-  一般我们的起始输入矩阵size为[batch_size, seq_length]，token embedding 后每个单词以向量表示，输出size就变为了[batch_size, seq_length, dim_vector]
-
-
+ Typically, our starting input matrix has a size of [batch_size, seq_length], where each word is represented as a vector after token embedding. The output size then changes to [batch_size, seq_length, dim_vector].
 
 ### Step 1.2  Positional Embedding
 
-现在我们进行第二步，对token embedding后的输入进行位置编码。
+Now we proceed to the second step1.2, which involves adding positional encoding to the input after token embedding. 
 
-用论文中的两个公式进行计算，这里的输入与上一步的输入相同，size均为[batch_size, seq_length]，其中的PE矩阵代表着全部的位置信息。最后的输出size为[seq_length, dim_vector]详细代码如下;
+We use two formulas from the paper to calculate this. The input here is the same as in the previous step, with a size of [batch_size, seq_length], and the PE matrix represents all the positional information. The final output size is [seq_length, dim_vector]. The detailed code is as follows;
 
 ```python
-# step 2、 Positional embeddings for our input
+# step 1.2 Positional embeddings for our input
 import torch
 from torch import nn
 import math
@@ -108,10 +102,10 @@ class PositionalEmbedding(nn.Module):
 
 ### Step 1.3  Concatenating Positional and Word Embeddings
 
-第三步很简单，就是add word embeddings and positional embeddings，并且在其中加入dropout层，避免过拟合。
+We add the word embeddings and positional embeddings together and incorporate a dropout layer to prevent overfitting. 
 
 ```python
-# step 3、  Concatenating Positional and Word Embeddings
+# step 1.3  Concatenating Positional and Word Embeddings
 
 import torch
 import torch.nn as nn
@@ -146,18 +140,18 @@ class TransformerEmbedding(nn.Module):
         return self.dropout(token_embd + position_embd)
 ```
 
-## Step 2. MultiHead Attention
+## Step 2. Multi-Head-Attention
 
 ### Step 2.1 Building Multi Head Attention
 
-  我们进行构建Multi Head Attention，输入是从上一步相加的token embedding and position embedding 矩阵，q， k， v均是此矩阵，size为[batch_size, seq_length, dim_vector]。
+We construct the Multi-Head Attention mechanism. The input is the matrix obtained by adding the token embedding and positional embedding from the previous step, where both the queries (q), keys (k), and values (v) are derived from this matrix, with a size of [batch_size, seq_length, dim_vector].
 
- 这一步需要传入dim_vector维度以及head数量，因为多头注意力的代码实现是将dim_vector分成head个dim，这样就相当于多头注意力，每个头的维度都是dim_split。For example,我们的维度是512，分成了8个头，那么每个dim_split就是512/8=64。
+This step requires the dimensions of dim_vector and the number of heads. The implementation of multi-head attention splits the dim_vector into dim_vector/heads, creating multiple heads where each head has a dimension of dim_split. For instance, if our dimension is 512 and we divide it into 8 heads, then each dim_split would be 512/8 = 64.
 
-具体代码如下：
+Here is the specific code:
 
 ```python
-# step 4、 Build multi-head attention layer
+# step 2.1 Build multi-head attention layer
 
 import torch.nn as nn
 from MyTransformer_English.s1_Embedding.TransformerEmbedding import TransformerEmbedding
@@ -236,13 +230,11 @@ class MultiHeadAttention(nn.Module):
 
 ```
 
-
-
-其中 calculate attention 实现如下，作为我们的 Step 2.1.1：
+The `calculate_attention` function is implemented as our Step 2.1.1
 
 #### Step 2.1.1 calculate self-attention
 
- calculate attention , 代码如下所示：
+Here is the  code:
 
 ```python
 # Build a sub-part of the multi-head attention layer, i.e., an implementation module for attention calculation
@@ -287,15 +279,11 @@ def calculate_attention(q, k, v, mask=None, drop_out=None):
     return out, attention
 ```
 
-
-
-
-
 ### Step 2.2 Add&Norm
 
- 这一层中的Add就是residual block，所以需要在后面的模型中实现，本次的代码只实现了Norm。
+In this layer, the “Add” operation serves as the residual block, which will be implemented in the subsequent model. For this code, only the Norm layer is implemented.
 
-Norm层pytorch已经有了实现，我们只需要调用nn.LayerNorm即可，但在这一层中我们还是自己写一下以加深印象，后续模型中的Norm不会使用本层的MyAddNorm，而是直接使用nn.LayerNorm。
+The Norm layer has been implemented in PyTorch, and we can simply use nn.LayerNorm. However, in this layer, we still implement it ourselves to reinforce our understanding. In the subsequent model, we will not use the MyAddNorm from this layer but will directly use nn.LayerNorm.
 
 ```python
 # step 2.2、Add&Norm. In fact,add here is actually residual block.
@@ -321,11 +309,9 @@ class MyAddNorm(nn.Module):
         return out
 ```
 
-
-
 ### Step 2.3 FeedForward
 
-A very simple structure, a combination of Linear and Relu。代码如下：
+A very simple structure, a combination of Linear and Relu.
 
 ```python
 # step 2.3 FeedForward，A very simple structure, a combination of Linear and Relu
@@ -348,11 +334,7 @@ class FeedForward(nn.Module):
         return out
 ```
 
-
-
 ## Step 3. Encoder
-
-
 
 ### Step 3.1 Encoder Layer
 
@@ -410,7 +392,7 @@ class EncoderLayer(nn.Module):
 
 ### Step 3.2 Final Encoder
 
-The final Encoder part, including Embedding and encoder_layer。这一步非常简单，就是组装之前写好的模块，代码如下：
+The final Encoder part, including Embedding and encoder_layer.
 
 ```python
 # step 3.2 The final Encoder part, including Embedding and encoder_layer
@@ -453,11 +435,225 @@ class Encoder(nn.Module):
 
 ## Step 4. Decoder
 
-
-
 ### Step 4.1 Decoder Layer
-
-构建decoder有点复杂，建议看代码之前好好阅读文章开始时推荐的结合阅读以及transformer结构相关的文章。
 
 In "encoder-decoder attention" layers, the q come from the previous decoder layer, and the k and v come from the output of the encoder.
 
+```python
+# step 4.1、encoder layer
+import torch.nn as nn
+from MyTransformer_English.s2_MultiHeadAttention.muti_head_attention import MultiHeadAttention
+from MyTransformer_English.s2_MultiHeadAttention.feed_forward import FeedForward
+
+
+class DecoderLayer(nn.Module):
+    """
+        Decoder Layer
+
+        Args:
+            dim_vector: the dimension of embedding vector for each input word.
+            n_head: Number of heads
+            dim_hidden: The parameter in the feedforward layer
+            dropout: probability of an element to be zeroed.
+    """
+    def __init__(self, dim_vector, n_head, dropout, dim_hidden):
+        super().__init__()
+        # 1、The first attention layer and add&norm in decoder
+        self.attention_1 = MultiHeadAttention(dim_vector, n_head)
+        self.norm1 = nn.LayerNorm(dim_vector)
+        self.dropout1 = nn.Dropout(dropout)
+
+        # 2、 The second attention layer and add&norm in decoder
+        self.attention_2 = MultiHeadAttention(dim_vector, n_head)
+        self.norm2 = nn.LayerNorm(dim_vector)
+        self.dropout2 = nn.Dropout(dropout)
+
+        # 3、Feedforward and add&norm
+        self.feedforward = FeedForward(dim_vector, dim_hidden, dropout)
+        self.norm2 = nn.LayerNorm(dim_vector)
+        self.dropout3 = nn.Dropout(dropout)
+
+    def forward(self, encoder_output, decoder_input, trg_mask, src_mask):
+        """
+            Decoder Layer
+
+            Args:
+                encoder_output: Output of encoder layer
+                decoder_input: Input of decoder layer
+                trg_mask: Target mask, in decoder layer, this is the first mask
+                src_mask: The second mask in decoder layer
+        """
+        # 1、The first attention layer
+        _input = decoder_input
+        x = self.attention_1(q=decoder_input, k=decoder_input, v=decoder_input, mask=trg_mask)
+
+        # 2、 Add&Norm
+        x = self.dropout1(x)
+        x = self.norm1(x + _input)
+
+        # 3、The second attention layer
+        _input = x
+        x = self.attention_2(q=x, k=encoder_output, v=encoder_output, mask=src_mask)
+
+        # 4、 Add&Norm
+        x = self.dropout2(x)
+        x = self.norm1(x + _input)
+
+        # 5、feedforward
+        _input = x
+        x = self.feedforward(x)
+
+        # 6、 Add&Norm
+        x = self.dropout3(x)
+        x = self.norm1(x + _input)
+        return x
+```
+
+
+
+### Step 4.2 Final Decoder
+
+The final Decoder part, including Embedding and decoder_layer
+
+```
+# step 4.2 The final Decoder part, including Embedding and decoder_layer
+import torch.nn as nn
+from MyTransformer_English.s1_Embedding.TransformerEmbedding import TransformerEmbedding
+from MyTransformer_English.s4_Decoder.decoder_layer import DecoderLayer
+
+
+class Decoder(nn.Module):
+    """
+        Final Decoder Layer
+
+        input size:[batch_size, seq_length, dim_vector]
+        return size: [batch_size, seq_length, vocab_size]
+
+        Args:
+            vocab_size: size of vocabulary,the vocabulary size determines the total number of unique words in our dataset.
+            dim_vector: the dimension of embedding vector for each input word.
+            n_head: Number of heads
+            max_len: Maximum length of input sentence
+            dim_hidden: The parameter in the feedforward layer
+            dropout: probability of an element to be zeroed.
+            num_layer: The number of encoders
+    """
+    def __init__(self, vocab_size, dim_vector, max_len, dropout, num_layer, n_head, dim_hidden):
+        super().__init__()
+        self.embed = TransformerEmbedding(vocab_size, dim_vector, max_len, dropout)
+        self.decoder_layers = nn.ModuleList(
+            [DecoderLayer(dim_vector, n_head, dropout, dim_hidden) for _ in range(num_layer)])
+        self.linear = nn.Linear(dim_vector, vocab_size)
+        
+    def forward(self, decoder_input, encoder_output, trg_mask, src_mask):
+        # 1、 embedding
+        out = self.embed(decoder_input)
+
+        # 2、attention
+        for layer in self.decoder_layers:
+            out = layer(encoder_output, out, trg_mask, src_mask)
+
+        # 3、 linear
+        out = self.linear(out)
+        return out
+```
+
+
+
+## Step 5. Final Transformer
+
+After a series of preparations, we can finally construct the last Transformer model. The code is as follows, and we conducted a test at the end, which successfully produced the output.
+
+```
+# step 5 Final Transformer
+# The implementation of src_mask and trg_mask is also covered here.
+import torch.nn as nn
+import torch
+from MyTransformer_English.s3_Encoder.final_encoder import Encoder
+from MyTransformer_English.s4_Decoder.final_decoder import Decoder
+
+
+class Transformer(nn.Module):
+    """
+        Final Transformer
+
+        Args:
+            encoder_voc_size: size of encoder vocabulary,the vocabulary size determines the total number of unique words in our dataset.
+            decoder_voc_size: size of decoder vocabulary,the vocabulary size determines the total number of unique words in our dataset.
+            dim_vector: the dimension of embedding vector for each input word.
+            n_head: Number of heads
+            max_len: Maximum length of input sentence
+            dim_hidden: The parameter in the feedforward layer
+            dropout: probability of an element to be zeroed.
+            num_layer: The number of encoders
+            src_pad_idx: mask idx
+            trg_pad_idx: mask idx
+    """
+
+    def __init__(self, src_pad_idx, trg_pad_idx, encoder_voc_size, decoder_voc_size, dim_vector, n_head,
+                 max_len, dim_hidden, num_layer, dropout):
+        super().__init__()
+        self.src_pad_idx = src_pad_idx
+        self.trg_pad_idx = trg_pad_idx
+        self.encoder = Encoder(
+            encoder_voc_size, dim_vector, max_len, dropout, num_layer, n_head, dim_hidden
+        )
+        self.decoder = Decoder(
+            decoder_voc_size, dim_vector, max_len, dropout, num_layer, n_head, dim_hidden
+        )
+
+    def forward(self, src_input, trg_input):
+        src_mask = get_src_mask(src_input, self.src_pad_idx)
+        trg_mask = get_trg_mask(trg_input, self.trg_pad_idx)
+
+        encoder_out = self.encoder(src_input, src_mask)
+        final_out = self.decoder(trg_input, encoder_out, trg_mask, src_mask)
+        return final_out
+
+
+# This function echoes masked_fill in calculate_attention
+def get_src_mask(seq, src_pad_idx):
+    return (seq != src_pad_idx).unsqueeze(1).unsqueeze(2)
+
+
+def get_trg_mask(seq, trg_pad_idx):
+    batch_size, seq_len = seq.size()
+    trg_pad_mask = (seq != trg_pad_idx).unsqueeze(1).unsqueeze(3)
+    trg_sub_mask = torch.tril(torch.ones(seq_len, seq_len)).type(torch.ByteTensor)
+    trg_mask = trg_sub_mask & trg_pad_mask
+    return trg_mask
+
+
+# final test
+if __name__ == '__main__':
+    src_input = torch.LongTensor([[1, 1, 4, 0], [4, 3, 2, 9]])
+    trg_input = torch.LongTensor([[5, 2, 5, 0], [6, 7, 9, 8]])
+    src_pad_idx = 0
+    trg_pad_idx = 0
+    encoder_voc_size = 10
+    decoder_voc_size = 10
+    dim_vector = 6
+    n_head = 2
+    max_len = 10
+    dim_hidden = 3
+    num_layer = 9
+    dropout = 0.1
+
+    model = Transformer(src_pad_idx, trg_pad_idx, encoder_voc_size, decoder_voc_size, dim_vector, n_head, max_len,
+                        dim_hidden,
+                        num_layer, dropout)
+    out = model(src_input, trg_input)
+    print(out)
+```
+
+
+
+## Update Plan for Future
+
+Although I wish to provide a detailed and comprehensive explanation of the Transformer to ensure that everyone can understand it, this article still has many shortcomings. The next step is to delve into more detailed explanations of certain aspects.
+
+- [ ] Provide a detailed explanation of the masking technique and its application.
+- [ ] Conduct input-output tests for each step to help readers better understand how it works.
+- [ ] Explain practical tasks based on the Transformer architecture, such as machine translation and text classification.
+
+Look forward to the upcoming content updates. Also, feel free to leave questions and suggestions in the comments section. I will do my best to answer and improve them.

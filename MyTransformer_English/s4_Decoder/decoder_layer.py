@@ -32,8 +32,16 @@ class DecoderLayer(nn.Module):
         self.dropout3 = nn.Dropout(dropout)
 
     def forward(self, encoder_output, decoder_input, trg_mask, src_mask):
-        # 1、与编码层一样，第一步是计算注意力
-        # 这里的trg_mask是用于使decoder中前面词无法使用到后面词的信息，并且也需要考虑padding。
+        """
+            Decoder Layer
+
+            Args:
+                encoder_output: Output of encoder layer
+                decoder_input: Input of decoder layer
+                trg_mask: Target mask, in decoder layer, this is the first mask
+                src_mask: The second mask in decoder layer
+        """
+        # 1、The first attention layer
         _input = decoder_input
         x = self.attention_1(q=decoder_input, k=decoder_input, v=decoder_input, mask=trg_mask)
 
@@ -41,8 +49,7 @@ class DecoderLayer(nn.Module):
         x = self.dropout1(x)
         x = self.norm1(x + _input)
 
-        # 3、 第二层注意力计算
-        # 这里的src_mask是用于encoder中当句子长度不一时，需要将所有的句子填充至相同的长度。
+        # 3、The second attention layer
         _input = x
         x = self.attention_2(q=x, k=encoder_output, v=encoder_output, mask=src_mask)
 
@@ -57,5 +64,4 @@ class DecoderLayer(nn.Module):
         # 6、 Add&Norm
         x = self.dropout3(x)
         x = self.norm1(x + _input)
-
         return x

@@ -2,8 +2,8 @@
 # 这里还会涉及到mask相关实现，分别是src_mask 和 trg_mask
 import torch.nn as nn
 import torch
-from MyTransformer.Encoder.final_encoder import Encoder
-from MyTransformer.Decoder.final_decoder import Decoder
+from MyTransformer_Chinese.Encoder.final_encoder import Encoder
+from MyTransformer_Chinese.Decoder.final_decoder import Decoder
 
 
 class Transformer(nn.Module):

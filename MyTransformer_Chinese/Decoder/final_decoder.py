@@ -1,7 +1,7 @@
 # step 10、构建好decoder layer后开始构建最终的 decoder
 import torch.nn as nn
-from MyTransformer.Embedding.TransformerEmbedding import TransformerEmbedding
-from MyTransformer.Decoder.decoder_layer import DecoderLayer
+from MyTransformer_Chinese.s1_Embedding.TransformerEmbedding import TransformerEmbedding
+from MyTransformer_Chinese.Decoder.decoder_layer import DecoderLayer
 
 
 class Decoder(nn.Module):
