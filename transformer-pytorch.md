@@ -1,16 +1,16 @@
 # Transformer code: Step-by-step Understanding
 
-   After reading the article “Solving Transformer by Hand: A Step-by-Step Math Example,” I have gained a deeper understanding of the transformer. Unfortunately, the article does not provide specific code examples for each step. Therefore, this article, based on the aforementioned article, offers code examples and explanations for each part. It is strongly recommended to read this article together with “Solving Transformer by Hand: A Step-by-Step Math Example.”
+ After reading the article “Solving Transformer by Hand: A Step-by-Step Math Example,” I have gained a deeper understanding of the transformer. Unfortunately, the article does not provide specific code examples for each step. Therefore, this article, based on the aforementioned article, offers code examples and explanations for each part. It is strongly recommended to read this article together with “Solving Transformer by Hand: A Step-by-Step Math Example.”
 
-  I plan to use concise language and detailed code explanations to provide a comprehensive code guide (for both coders and non-coders) with a step-by-step approach to understanding how they work.
+ I plan to use concise language and detailed code explanations to provide a comprehensive code guide (for both coders and non-coders) with a step-by-step approach to understanding how they work.
 
- The following is an overall structure diagram of the code, including each step and its respective sub-modules.
+The following is an overall structure diagram of the code, including each step and its respective sub-modules.
 
 ![transformer](./pic/transformer.png)
 
 ## Table of Contents
 
-[TOC]
+
 
 ## Step 1. Embedding
 
