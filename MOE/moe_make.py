@@ -70,15 +70,45 @@ class SparseMOE(nn.Module):
         final_output = torch.zeros_like(x)
         print(f"final_output:\n {final_output}")
 
+        # 展平，其实就是相当于把，每个batch拼接
         flat_x = x.view(-1, x.size(-1))
         print(f"flat_x:{flat_x} \n flat_x size:{flat_x.size()}")
+        flat_gating_output = gating_output.view(-1, gating_output.size(-1))
+        print(f"flat_gating_output:{flat_gating_output} \n flat_gating_output size:{flat_gating_output.size()}")
+
+        for i, expert in enumerate(self.experts):
+            # Create a mask for the inputs where the current expert is in top-k
+            expert_mask = (indices == i).any(dim=-1)
+            print(f"expert_mask:{expert_mask}", '\n', expert_mask.size())
+            flat_mask = expert_mask.view(-1)
+            print(f"flat_mask:{flat_mask}", '\n', flat_mask.size())
+
+            if flat_mask.any():
+                expert_input = flat_x[flat_mask]
+                print(f"expert_input:{expert_input}", expert_input.size())
+                expert_output = expert(expert_input)
+                print(f"expert_output:{expert_output}", expert_output.size())
+
+                # Extract and apply gating scores
+                gating_score = flat_gating_output[flat_mask, i].unsqueeze(1)
+                print(f"gating_score:{gating_score}", gating_score.size())
+                weight_output = expert_output * gating_score
+                print(f"weight_output:{weight_output}", weight_output.size())
+
+                # Update final output additively by indexing and adding
+                final_output[expert_mask] += weight_output.squeeze(1)
+                print(f"weight_output:{weight_output}")
+                print(f"weight_output.squeeze(-1):{weight_output.squeeze(1)}")
+                print(f"final_output:{final_output}", final_output.size())
+
+        return final_output
 
 
 if __name__ == '__main__':
     num_experts = 8
     top_k = 2
-    n_embd = 6
+    n_embd = 4
     dropout = 0.1
-    mh_output = torch.randn(3, 4, 6)
+    mh_output = torch.randn(2, 3, n_embd)
     smoe = SparseMOE(n_embd, num_experts, top_k)
-    smoe(mh_output)
+    print(f"smoe(mh_output):{smoe(mh_output)}")
